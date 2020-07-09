@@ -1,14 +1,19 @@
 #!/usr/bin/env ruby
 
 require 'fastrandom/random'
+require 'fastrandom/random_cext'
+
 require 'benchmark/ips'
 
 puts RUBY_DESCRIPTION
 
 fr = FastRandom::Random.new
+cr = FastCExtRandom::Random.new
 rr = Random.new
 
 Benchmark.ips do |x|
-  x.report("fastrandom") { fr.rand }
-  x.report("random") { rr.rand }
+  x.report("fastrandom FFI") { fr.rand }
+  x.report("fastrandom CExt") { cr.rand }
+  x.report("default Random") { rr.rand }
+  x.compare!
 end
